@@ -1,5 +1,6 @@
 package com.example.examplemod.inits;
 
+import com.example.examplemod.Blocks.Special.WeblikeBlock;
 import com.example.examplemod.Blocks.Wood.ExampleWood;
 import com.example.examplemod.ExampleMod;
 import com.example.examplemod.Features.ExampleSapling;
@@ -17,6 +18,7 @@ public class BlockInit {
     public static final RegistryObject<Block> EXAMPLE_SAPLING = BLOCKS.register("example_sapling", ExampleSapling::new);
     public static final RegistryObject<Block> EXAMPLE_LEAVES = BLOCKS.register("example_leaves",BlockInit::createLeavesBlock);
     public static final RegistryObject<Block> EXAMPLE_WOOD = BLOCKS.register("example_wood", ExampleWood::new);
+    public static final RegistryObject<Block> WEB_LIKE_BLOCK = BLOCKS.register("web_like_block", WeblikeBlock::new);
 
 
 
