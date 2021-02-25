@@ -1,7 +1,9 @@
 package com.example.examplemod.Skills;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.StringTextComponent;
 
 public class Mining extends AbstractSkill {
 
@@ -10,8 +12,8 @@ public class Mining extends AbstractSkill {
     }
 
     @Override
-    public void onLevelUp() {
-
+    public void onLevelUp(PlayerEntity playerEntity) {
+        playerEntity.sendMessage(new StringTextComponent("Leveled up WoodCutting to " + this.level),playerEntity.getUniqueID());
     }
 
     @Override
@@ -29,7 +31,7 @@ public class Mining extends AbstractSkill {
 
 
     @Override
-    public void checkBlock(Block block) {
+    public void checkBlock(Block block,PlayerEntity playerEntity) {
 
     }
 

@@ -40,7 +40,8 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onBlockBreak(final BlockEvent.BreakEvent event){
-        SkillSave.saves.parallelStream().forEach(save -> PlayerSkills.handleBlockBreak(event.getState().getBlock(),save.getPlayerSkillsMap().get(event.getPlayer().getUniqueID())));
+        PlayerSkills skills = PlayerSkills.handleBlockBreak(event.getState().getBlock(), SkillSave.saves.get(0).getPlayerSkillsMap().get(event.getPlayer().getUniqueID()),event.getPlayer());
+        SkillSave.saves.forEach(k->k.getPlayerSkillsMap().put(event.getPlayer().getUniqueID(),skills));
         SkillSave.saves.forEach(SkillSave::markDirty);
 
         addPotionEffects(event.getPlayer(), ImmutableList.of(

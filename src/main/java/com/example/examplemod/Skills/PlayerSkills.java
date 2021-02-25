@@ -1,6 +1,7 @@
 package com.example.examplemod.Skills;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.BlockTags;
 
@@ -17,13 +18,12 @@ public class PlayerSkills {
         this.playerID = playerID;
     }
 
-    public static void handleBlockBreak(Block block,PlayerSkills skills){
+    public static PlayerSkills handleBlockBreak(Block block, PlayerSkills skills, PlayerEntity playerEntity){
         if(block.isIn(BlockTags.LOGS)){
-            skills.woodCutting.checkBlock(block);
+            skills.woodCutting.checkBlock(block,playerEntity);
         }
-
+        return skills;
     }
-
 
     public void deserialize(CompoundNBT nbt) {
        woodCutting.deserialize(nbt);
