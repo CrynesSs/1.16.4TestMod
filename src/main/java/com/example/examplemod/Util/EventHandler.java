@@ -2,6 +2,8 @@ package com.example.examplemod.Util;
 
 
 import com.example.examplemod.ExampleMod;
+import com.example.examplemod.Skills.PlayerSkills;
+import com.example.examplemod.Util.SaveData.SkillSave;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,9 +16,11 @@ import net.minecraft.potion.Effects;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,9 +40,9 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onBlockBreak(final BlockEvent.BreakEvent event){
-        if(event.getState().getBlock().isIn(BlockTags.LOGS)){
-            //level up woodcutting
-        }
+        SkillSave.saves.parallelStream().forEach(save -> PlayerSkills.handleBlockBreak(event.getState().getBlock(),save.getPlayerSkillsMap().get(event.getPlayer().getUniqueID())));
+        SkillSave.saves.forEach(SkillSave::markDirty);
+
         addPotionEffects(event.getPlayer(), ImmutableList.of(
                 new Triple<>(Effects.REGENERATION, 9000, 1),
                 new Triple<>(Effects.ABSORPTION, 10000, 1),
@@ -58,6 +62,17 @@ public class EventHandler {
     }
     public static void addPotionEffects(PlayerEntity playerEntity, List<Triple<Effect,Integer,Integer>> effectInstances){
         effectInstances.parallelStream().forEach(effect->playerEntity.addPotionEffect(new EffectInstance(effect.a,effect.b,effect.c)));
+    }
+
+    @SubscribeEvent
+    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
+        System.out.println("Player joined the World");
+            SkillSave.saves.forEach(save -> {
+                if(!save.getPlayerSkillsMap().containsKey(event.getPlayer().getUniqueID())){
+                    save.getPlayerSkillsMap().put(event.getPlayer().getUniqueID(),new PlayerSkills(event.getPlayer().getUniqueID()));
+                    save.markDirty();
+                };
+            });
     }
     @SubscribeEvent
     public static void onItemCrafted(PlayerEvent.ItemCraftedEvent event){

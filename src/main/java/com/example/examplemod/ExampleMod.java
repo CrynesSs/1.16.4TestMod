@@ -1,5 +1,6 @@
 package com.example.examplemod;
 
+import com.example.examplemod.Util.SaveData.SkillSave;
 import com.example.examplemod.inits.BlockInit;
 import com.example.examplemod.inits.FeatureInit;
 import com.example.examplemod.inits.ItemInit;
@@ -89,6 +90,14 @@ public class ExampleMod
     public void onServerStarting(FMLServerStartingEvent event) {
         // do something when the server starts
         LOGGER.info("HELLO from server starting");
+        event.getServer().getWorlds().forEach(serverWorld -> {
+            SkillSave save = serverWorld.getSavedData().getOrCreate(SkillSave::new,SkillSave.DATA_NAME);
+            SkillSave.saves.add(save);
+            save.markDirty();
+            if(save.getPlayerSkillsMap().isEmpty()){
+                System.out.println("Empty Skill List");
+            }
+        });
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD

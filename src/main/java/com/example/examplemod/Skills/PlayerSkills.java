@@ -1,22 +1,40 @@
 package com.example.examplemod.Skills;
 
+import net.minecraft.block.Block;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.BlockTags;
+
+import java.util.UUID;
 
 public class PlayerSkills {
-    public void setI(int i) {
-        this.i = i;
+
+    private final UUID playerID;
+    private final Mining mining = new Mining();
+    private final WoodCutting woodCutting = new WoodCutting();
+
+
+    public PlayerSkills(UUID playerID) {
+        this.playerID = playerID;
     }
-    public PlayerSkills(){
+
+    public static void handleBlockBreak(Block block,PlayerSkills skills){
+        if(block.isIn(BlockTags.LOGS)){
+            skills.woodCutting.checkBlock(block);
+        }
 
     }
 
-    private int i = 5;
-    public void deserialize(CompoundNBT compoundNBT) {
-        compoundNBT.putInt("level",i);
+
+    public void deserialize(CompoundNBT nbt) {
+       woodCutting.deserialize(nbt);
+       mining.deserialize(nbt);
     }
-    public static PlayerSkills serialize(CompoundNBT nbt){
-        PlayerSkills skills = new PlayerSkills();
-        skills.setI(nbt.getInt("level"));
+
+    public static PlayerSkills serialiaze(CompoundNBT nbt, UUID id) {
+        PlayerSkills skills = new PlayerSkills(id);
+        skills.mining.readAdditional(nbt);
+        skills.woodCutting.readAdditional(nbt);
         return skills;
     }
+
 }

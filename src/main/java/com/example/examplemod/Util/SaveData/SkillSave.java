@@ -11,7 +11,12 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 public class SkillSave extends WorldSavedData {
-    private static final String DATA_NAME = ExampleMod.MOD_ID + "_Skills";
+    public static final String DATA_NAME = ExampleMod.MOD_ID + "_Skills";
+    public static List<SkillSave> saves = new ArrayList<>();
+    public HashMap<UUID, PlayerSkills> getPlayerSkillsMap() {
+        return playerSkillsMap;
+    }
+
     private final HashMap<UUID, PlayerSkills> playerSkillsMap = new HashMap<>();
 
     public SkillSave(){
@@ -26,7 +31,13 @@ public class SkillSave extends WorldSavedData {
     //Read the Stuff from Compound. Ez shit
     @Override
     public void read(@Nonnull CompoundNBT nbt) {
-
+        System.out.println("Reading Player Skills");
+        nbt.keySet().parallelStream().forEach(k->{
+            UUID id = UUID.fromString(k);
+            System.out.println(id.toString());
+            CompoundNBT nbt1 = (CompoundNBT) nbt.get(k);
+            playerSkillsMap.put(id,PlayerSkills.serialiaze(nbt1,id));
+        });
 
     }
 
@@ -34,6 +45,12 @@ public class SkillSave extends WorldSavedData {
     @Override
     @Nonnull
     public CompoundNBT write(@Nonnull CompoundNBT compound) {
+        System.out.println("Saving Player Skills");
+        playerSkillsMap.forEach((k,v)->{
+            CompoundNBT nbt = new CompoundNBT();
+            v.deserialize(nbt);
+            compound.put(k.toString(),nbt);
+        });
         return compound;
     }
 
@@ -44,5 +61,12 @@ public class SkillSave extends WorldSavedData {
         }
         return skillSaves;
     }
+    public static PlayerSkills getPlayerData(UUID id,SkillSave save){
+       return save.playerSkillsMap.get(id);
+    }
 
+    @Override
+    public void markDirty() {
+        super.markDirty();
+    }
 }

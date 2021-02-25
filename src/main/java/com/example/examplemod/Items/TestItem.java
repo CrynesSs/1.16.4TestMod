@@ -14,6 +14,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.lang.reflect.Field;
 
 public class TestItem extends Item {
     public TestItem() {
@@ -25,6 +28,18 @@ public class TestItem extends Item {
         if(context.getWorld().isRemote){
             return ActionResultType.SUCCESS;
         }
+        ForgeRegistries.BLOCKS.getValues().parallelStream().filter(block -> block instanceof LeavesBlock).forEach(block -> {
+            Field f;
+            try {
+                f = AbstractBlock.class.getDeclaredField("canCollide");
+                f.setAccessible(true);
+                f.set(block,false);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        });
+
+
         BlockPos start = context.getPos().add(-1,0,-1);
         for(int x = 0;x<3;x++){
             for(int z =0;z<3;z++){
