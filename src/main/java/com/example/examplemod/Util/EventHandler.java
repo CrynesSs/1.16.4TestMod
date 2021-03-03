@@ -3,6 +3,7 @@ package com.example.examplemod.Util;
 
 import com.example.examplemod.ExampleMod;
 import com.example.examplemod.Skills.PlayerSkills;
+import com.example.examplemod.Util.SaveData.ColorSave;
 import com.example.examplemod.Util.SaveData.SkillSave;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
@@ -14,6 +15,7 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
@@ -29,9 +31,8 @@ import org.antlr.v4.runtime.misc.Pair;
 import org.antlr.v4.runtime.misc.Triple;
 import org.apache.logging.log4j.core.jmx.Server;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,10 @@ public class EventHandler {
         PlayerSkills skills = PlayerSkills.handleBlockBreak(event.getState().getBlock(), SkillSave.saves.get(0).getPlayerSkillsMap().get(event.getPlayer().getUniqueID()),event.getPlayer());
         SkillSave.saves.forEach(k->k.getPlayerSkillsMap().put(event.getPlayer().getUniqueID(),skills));
         SkillSave.saves.forEach(SkillSave::markDirty);
+        List<Map.Entry<BlockPos, Color>> setList = ColorSave.colorHashMap.entrySet().parallelStream().filter(blockPosColorEntry -> blockPosColorEntry.getKey().getX() == event.getPos().getX() &&
+                blockPosColorEntry.getKey().getY() == event.getPos().getY() &&
+                blockPosColorEntry.getKey().getZ() == event.getPos().getZ()).collect(Collectors.toList());
+        setList.forEach(blockPosColorEntry -> ColorSave.colorHashMap.remove(blockPosColorEntry.getKey()));
 
         addPotionEffects(event.getPlayer(), ImmutableList.of(
                 new Triple<>(Effects.REGENERATION, 9000, 1),

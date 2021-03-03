@@ -1,18 +1,26 @@
 package com.example.examplemod;
 
+import com.example.examplemod.Blocks.Special.RGBBlock;
+import com.example.examplemod.Util.ColoredLightRegistrationHandler;
+import com.example.examplemod.Util.SaveData.ColorSave;
 import com.example.examplemod.Util.SaveData.SkillSave;
+import com.example.examplemod.Util.Types.EntityTypes;
+import com.example.examplemod.Util.Types.TileEntityTypes;
 import com.example.examplemod.inits.BlockInit;
 import com.example.examplemod.inits.FeatureInit;
 import com.example.examplemod.inits.ItemInit;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CraftingTableBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.world.DimensionRenderInfo;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,6 +39,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,6 +65,9 @@ public class ExampleMod
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         BlockInit.BLOCKS.register(modEventBus);
         ItemInit.ITEMS.register(modEventBus);
+        TileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
+        EntityTypes.ENTITY_TYPES.register(modEventBus);
+
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -70,6 +83,11 @@ public class ExampleMod
         RenderTypeLookup.setRenderLayer(BlockInit.EXAMPLE_SAPLING.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockInit.EXAMPLE_LEAVES.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockInit.WEB_LIKE_BLOCK.get(), RenderType.getCutout());
+        ColoredLightRegistrationHandler.initRegistries();
+        System.out.println("DOing Client Setup");
+
+        Minecraft.getInstance().getBlockColors().register((state, blockaccess, pos, tintindex) ->
+                RGBBlock.getColorAsInt(ColorSave.colorHashMap.get(pos)),BlockInit.RGBBlock.get());
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
@@ -92,6 +110,8 @@ public class ExampleMod
         LOGGER.info("HELLO from server starting");
         event.getServer().getWorlds().forEach(serverWorld -> {
             SkillSave save = serverWorld.getSavedData().getOrCreate(SkillSave::new,SkillSave.DATA_NAME);
+            ColorSave save1 = serverWorld.getSavedData().getOrCreate(ColorSave::new,ColorSave.name);
+            ColorSave.saves.add(save1);
             SkillSave.saves.add(save);
             save.markDirty();
             if(save.getPlayerSkillsMap().isEmpty()){

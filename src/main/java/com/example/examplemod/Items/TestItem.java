@@ -17,6 +17,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 public class TestItem extends Item {
     public TestItem() {
@@ -28,6 +29,7 @@ public class TestItem extends Item {
         if(context.getWorld().isRemote){
             return ActionResultType.SUCCESS;
         }
+        Objects.requireNonNull(context.getPlayer()).disableShield(true);
         ForgeRegistries.BLOCKS.getValues().parallelStream().filter(block -> block instanceof LeavesBlock).forEach(block -> {
             Field f;
             try {
