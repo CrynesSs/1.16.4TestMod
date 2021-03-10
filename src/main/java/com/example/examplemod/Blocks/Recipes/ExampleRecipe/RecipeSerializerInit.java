@@ -17,7 +17,7 @@ public class RecipeSerializerInit {
     public static final IRecipeSerializer<ExampleRecipe> EXAMPLE_RECIPE_SERIALIZER = new ExampleRecipeSerializer();
     public static final IRecipeType<IExampleRecipe> EXAMPLE_TYPE = Registry.register(Registry.RECIPE_TYPE,IExampleRecipe.RECIPE_TYPE_ID,new RecipeType<>());
 
-    public static final RegistryObject<IRecipeSerializer<?>> ALLOY_SMELTING_SERIALIZER = RECIPE_SERIALIZERS.register("example",
+    public static final RegistryObject<IRecipeSerializer<?>> EXAMPLE_SERIALIZER = RECIPE_SERIALIZERS.register("example",
             () -> EXAMPLE_RECIPE_SERIALIZER);
 
 

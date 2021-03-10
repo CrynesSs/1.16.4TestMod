@@ -34,6 +34,7 @@ public class ChestBlock extends Block {
         if (tile != null && tile.getClass().equals(ChestTE.class)) {
             if (player instanceof ServerPlayerEntity) {
                 try {
+                    tile.checkRecipe();
                     NetworkHooks.openGui((ServerPlayerEntity) player, tile, tile.getPos());
                     player.addStat(Stats.INTERACT_WITH_FURNACE);
                 } catch (Exception e) {

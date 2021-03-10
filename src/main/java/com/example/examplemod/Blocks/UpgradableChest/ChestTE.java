@@ -1,5 +1,6 @@
 package com.example.examplemod.Blocks.UpgradableChest;
 
+import com.example.examplemod.Blocks.Recipes.ExampleRecipe.RecipeSerializerInit;
 import com.example.examplemod.Util.Types.TileEntityTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -8,6 +9,7 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -17,6 +19,9 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ChestTE extends InventoryTile implements INamedContainerProvider {
     private int size = 0;
@@ -25,6 +30,14 @@ public class ChestTE extends InventoryTile implements INamedContainerProvider {
         super(TileEntityTypes.CHEST_TE.get(),255);
     }
 
+
+
+    public void checkRecipe(){
+        Set<IRecipe<?>> recipes =  world != null ? world.getRecipeManager().getRecipes().stream().filter(recipe -> recipe.getType().equals(RecipeSerializerInit.EXAMPLE_TYPE)).collect(Collectors.toSet())
+                : new HashSet<>();
+        System.out.println(recipes.size() + " amount");
+        recipes.forEach(k->System.out.println(k.getRecipeOutput().toString()));
+    }
 
 
     @Nonnull

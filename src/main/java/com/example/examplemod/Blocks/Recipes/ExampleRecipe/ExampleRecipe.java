@@ -54,7 +54,7 @@ public class ExampleRecipe implements IExampleRecipe{
     @Nonnull
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return RecipeSerializerInit.ALLOY_SMELTING_SERIALIZER.get();
+        return RecipeSerializerInit.EXAMPLE_SERIALIZER.get();
     }
 
     @Override

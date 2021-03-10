@@ -1,0 +1,18 @@
+{
+  "type": "example_mod:example",
+  "output": {
+    "item": "example_mod:example_wood",
+    "count": 2
+  },
+  "input": {
+    "0": {
+      "item": "example_mod:example_leaves",
+      "count": 3
+    },
+    "1": {
+      "item": "example_mod:example_sapling",
+      "count": 1
+    }
+  },
+  "smelttime": 300
+}

@@ -17,7 +17,7 @@ public class ExampleRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
     @Override
     @Nonnull
     public ExampleRecipe read(@Nonnull ResourceLocation recipeId,@Nonnull JsonObject json) {
-        System.out.println("Reading Alloysmelting");
+        System.out.println("Reading example");
         JsonObject inputs = JSONUtils.getJsonObject(json, "input");
         ItemStack output = CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "output"), true);
         Ingredient input1 = Ingredient.deserialize(inputs.getAsJsonObject("0"));
@@ -31,7 +31,7 @@ public class ExampleRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
     @Nullable
     @Override
     public ExampleRecipe read(@Nonnull ResourceLocation recipeId,@Nonnull PacketBuffer buffer) {
-        System.out.println("Reading Alloysmelting");
+        System.out.println("Reading example");
         ItemStack output = buffer.readItemStack();
         Ingredient input1 = Ingredient.read(buffer);
         Ingredient input2 = Ingredient.read(buffer);

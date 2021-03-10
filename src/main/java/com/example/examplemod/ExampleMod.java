@@ -1,5 +1,6 @@
 package com.example.examplemod;
 
+import com.example.examplemod.Blocks.Recipes.ExampleRecipe.RecipeSerializerInit;
 import com.example.examplemod.Blocks.Sounds.SoundInit;
 import com.example.examplemod.Blocks.Special.RGBBlock;
 import com.example.examplemod.Blocks.UpgradableChest.ChestScreen;
@@ -70,6 +71,7 @@ public class ExampleMod
         SoundInit.SOUNDS.register(modEventBus);
         BlockInit.BLOCKS.register(modEventBus);
         ItemInit.ITEMS.register(modEventBus);
+        RecipeSerializerInit.RECIPE_SERIALIZERS.register(modEventBus);
         TileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
         ContainerTypes.CONTAINER_TYPES.register(modEventBus);
         EntityTypes.ENTITY_TYPES.register(modEventBus);
