@@ -4,7 +4,9 @@ import com.example.examplemod.Blocks.Recipes.ExampleRecipe.RecipeSerializerInit;
 import com.example.examplemod.Blocks.Sounds.SoundInit;
 import com.example.examplemod.Blocks.Special.RGBBlock;
 import com.example.examplemod.Blocks.UpgradableChest.ChestScreen;
+import com.example.examplemod.TileEntities.ColorTE;
 import com.example.examplemod.Util.ColoredLightRegistrationHandler;
+import com.example.examplemod.Util.Packages.Networking;
 import com.example.examplemod.Util.SaveData.ColorSave;
 import com.example.examplemod.Util.SaveData.SkillSave;
 import com.example.examplemod.Util.Types.ContainerTypes;
@@ -25,6 +27,7 @@ import net.minecraft.client.world.DimensionRenderInfo;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.DimensionType;
@@ -53,12 +56,12 @@ import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("example_mod")
-public class ExampleMod
-{
+public class ExampleMod {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "example_mod";
     final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
     public ExampleMod() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -80,8 +83,8 @@ public class ExampleMod
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    private void setup(final FMLCommonSetupEvent event)
-    {
+    private void setup(final FMLCommonSetupEvent event) {
+        Networking.registerMessages();
         FeatureInit.registerTrees();
     }
 
@@ -96,35 +99,46 @@ public class ExampleMod
         System.out.println("DOing Client Setup");
 
         Minecraft.getInstance().getBlockColors().register((state, blockaccess, pos, tintindex) ->
-                RGBBlock.getColorAsInt(ColorSave.colorHashMap.get(pos)), BlockInit.RGBBlock.get());
-
+        {
+            System.out.println("Setting up a Color");
+            if(Minecraft.getInstance().world == null || pos == null){
+                return 0;
+            }
+            TileEntity tile = Minecraft.getInstance().world.getTileEntity(pos);
+            if(tile instanceof ColorTE){
+                return RGBBlock.getColorAsInt(((ColorTE) tile).color);
+            }else{
+                System.out.println("I am useless");
+                return 0;
+            }
+        },BlockInit.RGBBlock.get());
     }
 
-    private void enqueueIMC(final InterModEnqueueEvent event)
-    {
+    private void enqueueIMC(final InterModEnqueueEvent event) {
         // some example code to dispatch IMC to another mod
-        InterModComms.sendTo("examplemod", "helloworld", () -> { LOGGER.info("Hello world from the MDK"); return "Hello world";});
+        InterModComms.sendTo("examplemod", "helloworld", () -> {
+            LOGGER.info("Hello world from the MDK");
+            return "Hello world";
+        });
     }
 
-    private void processIMC(final InterModProcessEvent event)
-    {
+    private void processIMC(final InterModProcessEvent event) {
         // some example code to receive and process InterModComms from other mods
         LOGGER.info("Got IMC {}", event.getIMCStream().
-                map(m->m.getMessageSupplier().get()).
+                map(m -> m.getMessageSupplier().get()).
                 collect(Collectors.toList()));
     }
+
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
         // do something when the server starts
         LOGGER.info("HELLO from server starting");
         event.getServer().getWorlds().forEach(serverWorld -> {
-            SkillSave save = serverWorld.getSavedData().getOrCreate(SkillSave::new,SkillSave.DATA_NAME);
-            ColorSave save1 = serverWorld.getSavedData().getOrCreate(ColorSave::new,ColorSave.name);
-            ColorSave.saves.add(save1);
+            SkillSave save = serverWorld.getSavedData().getOrCreate(SkillSave::new, SkillSave.DATA_NAME);
             SkillSave.saves.add(save);
             save.markDirty();
-            if(save.getPlayerSkillsMap().isEmpty()){
+            if (save.getPlayerSkillsMap().isEmpty()) {
                 System.out.println("Empty Skill List");
             }
         });
@@ -132,7 +146,7 @@ public class ExampleMod
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
-    @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
         @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
@@ -140,6 +154,7 @@ public class ExampleMod
             LOGGER.info("HELLO from Register Block");
         }
     }
+
     public static final ItemGroup TAB = new ItemGroup("RedstoneEnhancements") {
         @Override
         public ItemStack createIcon() {

@@ -1,23 +1,25 @@
 package com.example.examplemod.Blocks.Special;
 
-import com.example.examplemod.Util.SaveData.ColorSave;
+import com.example.examplemod.TileEntities.ColorTE;
+import com.example.examplemod.Util.Packages.ChangeColorPacket;
+import com.example.examplemod.Util.Packages.Networking;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.WorldSavedData;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.Objects;
 
 public class RGBBlock extends Block {
 
@@ -26,23 +28,34 @@ public class RGBBlock extends Block {
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        ColorSave.colorHashMap.put(pos,new Color(0,0,0));
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        System.out.println("Creating new TE");
+        return new ColorTE();
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(!worldIn.isRemote){return ActionResultType.SUCCESS;}
+    @Nonnull
+    public ActionResultType onBlockActivated(@Nonnull BlockState state, World worldIn,@Nonnull BlockPos pos,@Nonnull PlayerEntity player,@Nonnull Hand handIn,@Nonnull BlockRayTraceResult hit) {
+        if (!worldIn.isRemote) {
+            return ActionResultType.SUCCESS;
+        }
+        System.out.println("Setting new Color ");
         int randomColor = (int) (Math.random() * Integer.MAX_VALUE);
-        ColorSave.colorHashMap.put(pos,new Color(randomColor));
-        ColorSave.saves.forEach(WorldSavedData::markDirty);
-        TileEntity entity = worldIn.getTileEntity(pos);
+        ((ColorTE) Objects.requireNonNull(worldIn.getTileEntity(pos))).setColorFromInt(randomColor);
         worldIn.notifyBlockUpdate(pos,state,state,3);
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        Networking.sendToServer(new ChangeColorPacket(randomColor,pos));
+
+        return ActionResultType.SUCCESS;
     }
+
     public static int getColorAsInt(Color color) {
-        if(color == null){
+        if (color == null) {
             return 0;
         }
         return ((color.getRed() & 0xFF) << 16) | ((color.getGreen() & 0xFF) << 8) | (color.getBlue() & 0xFF);
