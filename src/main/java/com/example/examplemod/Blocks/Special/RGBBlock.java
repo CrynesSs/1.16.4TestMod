@@ -8,6 +8,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -32,9 +33,11 @@ public class RGBBlock extends Block {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(!worldIn.isRemote){return ActionResultType.SUCCESS;}
         int randomColor = (int) (Math.random() * Integer.MAX_VALUE);
         ColorSave.colorHashMap.put(pos,new Color(randomColor));
         ColorSave.saves.forEach(WorldSavedData::markDirty);
+        TileEntity entity = worldIn.getTileEntity(pos);
         worldIn.notifyBlockUpdate(pos,state,state,3);
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }

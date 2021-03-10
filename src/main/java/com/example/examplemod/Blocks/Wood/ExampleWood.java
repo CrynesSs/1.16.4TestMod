@@ -1,5 +1,6 @@
 package com.example.examplemod.Blocks.Wood;
 
+import com.example.examplemod.Blocks.Sounds.SoundInit;
 import com.example.examplemod.TileEntities.ExampleTE;
 import com.google.common.hash.HashFunction;
 import net.hypherionmc.hypcore.api.ColoredLightManager;
@@ -12,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.DimensionType;
@@ -39,6 +41,12 @@ public class ExampleWood extends Block {
 
     public Color getColor() {
         return color;
+    }
+
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        worldIn.playSound(player,pos, SoundInit.EXAMPLE_SOUND.get(), SoundCategory.BLOCKS,1,1);
+        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }
 
     public enum EFade {

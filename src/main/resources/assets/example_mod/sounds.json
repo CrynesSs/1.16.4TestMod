@@ -1,0 +1,13 @@
+{
+  "example" : {
+    "category" : "item",
+    "subtitle" : "example.sub",
+    "sounds" : [
+      {
+        "name" : "example_mod:item/example",
+        "stream" : true
+      }
+    ]
+
+  }
+}

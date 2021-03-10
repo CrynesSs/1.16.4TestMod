@@ -3,6 +3,7 @@ package com.example.examplemod.inits;
 import com.example.examplemod.Blocks.Quarry.QuarryBlock;
 import com.example.examplemod.Blocks.Special.RGBBlock;
 import com.example.examplemod.Blocks.Special.WeblikeBlock;
+import com.example.examplemod.Blocks.UpgradableChest.ChestBlock;
 import com.example.examplemod.Blocks.Wood.ExampleWood;
 import com.example.examplemod.ExampleMod;
 import com.example.examplemod.Features.ExampleSapling;
@@ -23,7 +24,7 @@ public class BlockInit {
     public static final RegistryObject<Block> WEB_LIKE_BLOCK = BLOCKS.register("web_like_block", WeblikeBlock::new);
     public static final RegistryObject<Block> QUARRY = BLOCKS.register("quarry", QuarryBlock::new);
     public static final RegistryObject<RGBBlock> RGBBlock = BLOCKS.register("rgb",RGBBlock::new);
-
+    public static final RegistryObject<ChestBlock> CHEST = BLOCKS.register("chest", ChestBlock::new);
 
 
 

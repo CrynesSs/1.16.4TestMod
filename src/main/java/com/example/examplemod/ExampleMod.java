@@ -1,9 +1,12 @@
 package com.example.examplemod;
 
+import com.example.examplemod.Blocks.Sounds.SoundInit;
 import com.example.examplemod.Blocks.Special.RGBBlock;
+import com.example.examplemod.Blocks.UpgradableChest.ChestScreen;
 import com.example.examplemod.Util.ColoredLightRegistrationHandler;
 import com.example.examplemod.Util.SaveData.ColorSave;
 import com.example.examplemod.Util.SaveData.SkillSave;
+import com.example.examplemod.Util.Types.ContainerTypes;
 import com.example.examplemod.Util.Types.EntityTypes;
 import com.example.examplemod.Util.Types.TileEntityTypes;
 import com.example.examplemod.inits.BlockInit;
@@ -14,6 +17,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CraftingTableBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.world.DimensionRenderInfo;
@@ -63,9 +67,11 @@ public class ExampleMod
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        SoundInit.SOUNDS.register(modEventBus);
         BlockInit.BLOCKS.register(modEventBus);
         ItemInit.ITEMS.register(modEventBus);
         TileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
+        ContainerTypes.CONTAINER_TYPES.register(modEventBus);
         EntityTypes.ENTITY_TYPES.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
@@ -83,11 +89,13 @@ public class ExampleMod
         RenderTypeLookup.setRenderLayer(BlockInit.EXAMPLE_SAPLING.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockInit.EXAMPLE_LEAVES.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockInit.WEB_LIKE_BLOCK.get(), RenderType.getCutout());
+        ScreenManager.registerFactory(ContainerTypes.CHEST_TYPE.get(), ChestScreen::new);
         ColoredLightRegistrationHandler.initRegistries();
         System.out.println("DOing Client Setup");
 
         Minecraft.getInstance().getBlockColors().register((state, blockaccess, pos, tintindex) ->
-                RGBBlock.getColorAsInt(ColorSave.colorHashMap.get(pos)),BlockInit.RGBBlock.get());
+                RGBBlock.getColorAsInt(ColorSave.colorHashMap.get(pos)), BlockInit.RGBBlock.get());
+
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)

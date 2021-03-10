@@ -7,14 +7,17 @@ import com.example.examplemod.Util.SaveData.ColorSave;
 import com.example.examplemod.Util.SaveData.SkillSave;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShearsItem;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DimensionType;
@@ -23,6 +26,7 @@ import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -41,6 +45,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onBlockBreak(final BlockEvent.BreakEvent event){
+        event.getPlayer().attackEntityFrom(DamageSource.MAGIC,1);
         PlayerSkills skills = PlayerSkills.handleBlockBreak(event.getState().getBlock(), SkillSave.saves.get(0).getPlayerSkillsMap().get(event.getPlayer().getUniqueID()),event.getPlayer());
         SkillSave.saves.forEach(k->k.getPlayerSkillsMap().put(event.getPlayer().getUniqueID(),skills));
         SkillSave.saves.forEach(SkillSave::markDirty);
@@ -69,7 +74,23 @@ public class EventHandler {
     public static void addPotionEffects(PlayerEntity playerEntity, List<Triple<Effect,Integer,Integer>> effectInstances){
         effectInstances.parallelStream().forEach(effect->playerEntity.addPotionEffect(new EffectInstance(effect.a,effect.b,effect.c)));
     }
-
+    @SubscribeEvent
+    public static void livingUpdate(LivingEvent.LivingUpdateEvent event) {
+        Entity eventEntity = event.getEntity();
+        if (!(eventEntity instanceof PlayerEntity)) {
+            return;
+        }
+        if (eventEntity.prevDistanceWalkedModified == eventEntity.distanceWalkedModified) {
+            return;
+        }
+        PlayerEntity player = (PlayerEntity) eventEntity;
+        if (!player.isSprinting()) {
+            return;
+        }
+        if (player.getHeldItemMainhand().getItem() instanceof ShearsItem && (int) (Math.random() * 10) == 0) {
+            player.attackEntityFrom(DamageSource.MAGIC, 2);
+        }
+    }
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
         System.out.println("Player joined the World");
