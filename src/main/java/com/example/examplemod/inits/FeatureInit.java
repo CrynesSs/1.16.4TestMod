@@ -51,6 +51,5 @@ public class FeatureInit {
 
     public static void registerTrees() {
         register("example_tree", EXAMPLETREE);
-
     }
 }

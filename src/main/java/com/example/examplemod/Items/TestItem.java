@@ -25,6 +25,11 @@ public class TestItem extends Item {
     }
 
     @Override
+    public boolean makesPiglinsNeutral(ItemStack stack, LivingEntity wearer) {
+        return true;
+    }
+
+    @Override
     public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
         if(context.getWorld().isRemote){
             return ActionResultType.SUCCESS;

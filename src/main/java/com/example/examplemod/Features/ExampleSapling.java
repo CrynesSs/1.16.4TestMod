@@ -24,13 +24,15 @@ import java.util.List;
 import java.util.Random;
 
 public class ExampleSapling extends SaplingBlock {
+    public ExampleSapling() {
+        super(new ExampleTree(), AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().zeroHardnessAndResistance().sound(SoundType.PLANT));
+    }
+
     private static final List<Block> validBlocks = ImmutableList.of(Blocks.ACACIA_WOOD,new ExampleWood());
     @Override
     protected boolean isValidGround(@Nonnull BlockState state,@Nonnull IBlockReader worldIn,@Nonnull BlockPos pos) {
         return validBlocks.stream().anyMatch(state::isIn) || super.isValidGround(state, worldIn, pos);
     }
 
-    public ExampleSapling() {
-        super(new ExampleTree(), AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().zeroHardnessAndResistance().sound(SoundType.PLANT));
-    }
+
 }

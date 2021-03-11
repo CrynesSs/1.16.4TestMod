@@ -41,6 +41,7 @@ public class RGBBlock extends Block {
 
     @Override
     @Nonnull
+    @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(@Nonnull BlockState state, World worldIn,@Nonnull BlockPos pos,@Nonnull PlayerEntity player,@Nonnull Hand handIn,@Nonnull BlockRayTraceResult hit) {
         if (!worldIn.isRemote) {
             return ActionResultType.SUCCESS;
