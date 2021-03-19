@@ -1,6 +1,7 @@
 package com.example.examplemod.Items;
 
 import com.example.examplemod.ExampleMod;
+import com.google.common.collect.Lists;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -14,6 +15,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,6 +23,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class MultiPotion extends Item {
@@ -45,6 +48,9 @@ public class MultiPotion extends Item {
         super(new Item.Properties());
         effects.addAll(Arrays.asList(instance));
         this.maxEffectAmount = maxEffectAmount;
+        List<Effect> effects = ForgeRegistries.POTIONS.getValues().parallelStream()
+                .filter(e -> !e.isInstant()).collect(Collectors.toList());
+        Effect effect = effects.get((int) (Math.random()*effects.size()));
     }
 
     public static void addEffectToPotion(MultiPotion potion,EffectInstance ...instance){

@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.example.Mixins.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "example_mod.refmap.json",
+  "mixins": [
+    "MixinSlabBlock",
+    "MixinsPlayerEntity"
+  ],
+  "minVersion": "0.8"
+}

@@ -14,7 +14,7 @@ public class EntityTypes {
             ()->EntityType.Builder.create(Potatoprojectile::new, EntityClassification.MISC)
                     .size(0.5F, 0.5F)
                     .trackingRange(4)
-                    .func_233608_b_(20)
+                    //.func_233608_b_(20)
                     .immuneToFire()
                     .build("lolKekW"));
 }

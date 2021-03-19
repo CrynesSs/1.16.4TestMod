@@ -1,12 +1,14 @@
 package com.example.examplemod.Items;
 
 import com.example.examplemod.Util.Types.EntityTypes;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potions;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -21,9 +23,10 @@ public class Potatoprojectile extends AbstractArrowEntity {
         super(EntityTypes.POTATO_PROJECTILE.get(), shooter, worldIn);
     }
 
-    public Potatoprojectile(EntityType<? extends AbstractArrowEntity> type,World world) {
-        super(type, world);
+    public Potatoprojectile(EntityType<? extends AbstractArrowEntity> tEntityType, World world) {
+        super(tEntityType,world);
     }
+
 
     @Override
     @Nonnull

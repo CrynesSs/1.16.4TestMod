@@ -30,7 +30,6 @@ public class ColorTE extends TileEntity {
     @Override
     @Nonnull
     public CompoundNBT write(@Nonnull CompoundNBT compound) {
-        System.out.println("writing Color " + getColorAsInt());
         final CompoundNBT target = super.write(compound);
         target.putInt("color", this.getColorAsInt());
         return compound;
@@ -43,7 +42,6 @@ public class ColorTE extends TileEntity {
         if(world != null){
             updateTile();
         }
-        System.out.println("setting Color " + nbt.getInt("color"));
     }
 
     @Nullable
@@ -56,14 +54,12 @@ public class ColorTE extends TileEntity {
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        System.out.println("Received Data Packet at " + pkt.getPos());
         this.setColorFromInt(pkt.getNbtCompound().getInt("color"));
     }
 
     @Override
     @Nonnull
     public CompoundNBT getUpdateTag() {
-        System.out.println("Getting an Update Tag");
         CompoundNBT nbt = super.getUpdateTag();
         nbt.putInt("color", this.getColorAsInt());
         return nbt;
@@ -71,9 +67,7 @@ public class ColorTE extends TileEntity {
 
     @Override
     public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-        System.out.println("Handling Update Tag");
         this.setColorFromInt(tag.getInt("color"));
-        System.out.println("setting Color " + tag.getInt("color"));
     }
 
     public int getColorAsInt() {

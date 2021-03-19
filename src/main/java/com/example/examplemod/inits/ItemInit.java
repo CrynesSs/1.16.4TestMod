@@ -3,7 +3,9 @@ package com.example.examplemod.inits;
 import com.example.examplemod.ExampleMod;
 import com.example.examplemod.Items.MultiPotion;
 import com.example.examplemod.Items.PotatoGun;
+import com.example.examplemod.Items.SpellItem;
 import com.example.examplemod.Items.TestItem;
+import com.example.examplemod.Spells.Offensive.WindBlastSpell.WindBlastSpell;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.RegistryObject;
@@ -18,5 +20,8 @@ public class ItemInit {
     public static final RegistryObject<Item> TEST_ITEM = ITEMS.register("test_item", TestItem::new);
     public static final RegistryObject<Item> WEB_LIKE_BLOCK_ITEM = ITEMS.register("web_like_block",()->new BlockItem(BlockInit.WEB_LIKE_BLOCK.get(),new Item.Properties().group(ExampleMod.TAB)));
     public static final RegistryObject<Item> MULTI_POTION = ITEMS.register("multi_potion", MultiPotion::new);
+    public static final RegistryObject<Item> RGB_STAIRS_ITEM = ITEMS.register("rgb_stairs",()->new BlockItem(BlockInit.RGBSTAIRS.get(),new Item.Properties().group(ExampleMod.TAB)));
+    public static final RegistryObject<Item> DOUBLE_SLAB_ITEM = ITEMS.register("double_slab",()->new BlockItem(BlockInit.DOUBLE_SLAB.get(),new Item.Properties().group(ExampleMod.TAB))) ;
     public static final RegistryObject<PotatoGun> POTATO_GUN = ITEMS.register("potato_gun",PotatoGun::new);
+    public static final RegistryObject<Item> WIND_BLAST_SPELL = ITEMS.register("wind_blast",()->new SpellItem(new WindBlastSpell(),new Item.Properties().group(ExampleMod.TAB)));
 }

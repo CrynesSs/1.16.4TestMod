@@ -1,7 +1,9 @@
 package com.example.examplemod.inits;
 
+import com.example.examplemod.Blocks.BackedModelBlocks.DoubleSlabBlock;
 import com.example.examplemod.Blocks.Quarry.QuarryBlock;
 import com.example.examplemod.Blocks.Special.RGBBlock;
+import com.example.examplemod.Blocks.Special.RGBStairs;
 import com.example.examplemod.Blocks.Special.WeblikeBlock;
 import com.example.examplemod.Blocks.UpgradableChest.ChestBlock;
 import com.example.examplemod.Blocks.Wood.ExampleWood;
@@ -25,6 +27,8 @@ public class BlockInit {
     public static final RegistryObject<Block> QUARRY = BLOCKS.register("quarry", QuarryBlock::new);
     public static final RegistryObject<RGBBlock> RGBBlock = BLOCKS.register("rgb",RGBBlock::new);
     public static final RegistryObject<ChestBlock> CHEST = BLOCKS.register("chest", ChestBlock::new);
+    public static final RegistryObject<Block> RGBSTAIRS = BLOCKS.register("rgb_stairs",RGBStairs::new);
+    public static final RegistryObject<Block> DOUBLE_SLAB = BLOCKS.register("double_slab", DoubleSlabBlock::new);
 
 
 

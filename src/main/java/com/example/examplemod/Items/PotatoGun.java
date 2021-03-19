@@ -53,7 +53,7 @@ public class PotatoGun extends BowItem {
                     if (!worldIn.isRemote) {
                         AbstractArrowEntity abstractarrowentity = new Potatoprojectile(playerentity, worldIn);
                         abstractarrowentity = customArrow(abstractarrowentity);
-                        abstractarrowentity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw, 0.0F, f * 3.0F, 1.0F);
+                        //abstractarrowentity.func_234612_a_(playerentity, playerentity.rotationPitch, playerentity.rotationYaw, 0.0F, f * 3.0F, 1.0F);
                         if (f == 1.0F) {
                             abstractarrowentity.setIsCritical(true);
                         }

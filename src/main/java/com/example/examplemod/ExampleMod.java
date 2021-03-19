@@ -6,6 +6,7 @@ import com.example.examplemod.Blocks.Special.RGBBlock;
 import com.example.examplemod.Blocks.UpgradableChest.ChestScreen;
 import com.example.examplemod.TileEntities.ColorTE;
 import com.example.examplemod.Util.ColoredLightRegistrationHandler;
+import com.example.examplemod.Util.Events.FMLClientSetup;
 import com.example.examplemod.Util.Packages.Networking;
 import com.example.examplemod.Util.SaveData.ColorSave;
 import com.example.examplemod.Util.SaveData.SkillSave;
@@ -34,6 +35,7 @@ import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
@@ -71,6 +73,7 @@ public class ExampleMod {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.HIGH,FMLClientSetup::execute);
         SoundInit.SOUNDS.register(modEventBus);
         BlockInit.BLOCKS.register(modEventBus);
         ItemInit.ITEMS.register(modEventBus);
@@ -91,28 +94,13 @@ public class ExampleMod {
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
-        RenderTypeLookup.setRenderLayer(BlockInit.EXAMPLE_SAPLING.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(BlockInit.EXAMPLE_LEAVES.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(BlockInit.WEB_LIKE_BLOCK.get(), RenderType.getCutout());
+
         ScreenManager.registerFactory(ContainerTypes.CHEST_TYPE.get(), ChestScreen::new);
         ColoredLightRegistrationHandler.initRegistries();
         System.out.println("DOing Client Setup");
-
-        Minecraft.getInstance().getBlockColors().register((state, blockaccess, pos, tintindex) ->
-        {
-            System.out.println("Setting up a Color");
-            if(Minecraft.getInstance().world == null || pos == null){
-                return 0;
-            }
-            TileEntity tile = Minecraft.getInstance().world.getTileEntity(pos);
-            if(tile instanceof ColorTE){
-                return RGBBlock.getColorAsInt(((ColorTE) tile).color);
-            }else{
-                System.out.println("I am useless");
-                return 0;
-            }
-        },BlockInit.RGBBlock.get());
     }
+
+
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
         // some example code to dispatch IMC to another mod

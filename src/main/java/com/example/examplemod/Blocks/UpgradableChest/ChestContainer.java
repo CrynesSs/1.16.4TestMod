@@ -26,7 +26,8 @@ public class ChestContainer extends Container {
         super(ContainerTypes.CHEST_TYPE.get(), id);
         this.canInteractWithCallable = IWorldPosCallable.of(Objects.requireNonNull(tile.getWorld()), tile.getPos());
         IItemHandlerModifiable tileInv = tile.getInventory();
-
+        int x = 4;
+        x = x << 4;
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
                 this.addSlot(new SlotItemHandler(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));

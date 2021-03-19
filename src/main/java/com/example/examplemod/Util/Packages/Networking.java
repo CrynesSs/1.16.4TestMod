@@ -23,6 +23,11 @@ public class Networking {
                 .decoder(ChangeColorPacket::new)
                 .consumer(ChangeColorPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(UpdatePacket.class, nextID())
+                .encoder(UpdatePacket::toBytes)
+                .decoder(UpdatePacket::new)
+                .consumer(UpdatePacket::handle)
+                .add();
     }
 
     public static void sendToServer(Object packet) {

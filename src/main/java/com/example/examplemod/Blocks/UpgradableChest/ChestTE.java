@@ -31,15 +31,6 @@ public class ChestTE extends InventoryTile implements INamedContainerProvider {
     }
 
 
-
-    public void checkRecipe(){
-        Set<IRecipe<?>> recipes =  world != null ? world.getRecipeManager().getRecipes().stream().filter(recipe -> recipe.getType().equals(RecipeSerializerInit.EXAMPLE_TYPE)).collect(Collectors.toSet())
-                : new HashSet<>();
-        System.out.println(recipes.size() + " amount");
-        recipes.forEach(k->System.out.println(k.getRecipeOutput().toString()));
-    }
-
-
     @Nonnull
     @Override
     public int[] getSlotsForFace(@Nonnull Direction side) {
