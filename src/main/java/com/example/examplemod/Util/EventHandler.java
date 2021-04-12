@@ -153,33 +153,33 @@ public class EventHandler {
         });
     }
 
+
     @SubscribeEvent
     public static void onItemCrafted(PlayerEvent.ItemCraftedEvent event) {
-        if (true) {
-            //Check here if the Player can craft the Recipe via your Skill System
-        }
-        //If he can`t this will inform him that this recipe is not craftable yet
         //*Gets all the recipes that match the Item Output of the Crafting (In vanilla this should be unique iirc
         List<IRecipe<?>> recipes = event.getPlayer().getEntityWorld().getRecipeManager().getRecipes().parallelStream().filter(iRecipe -> iRecipe.getRecipeOutput().getItem() == event.getCrafting().getItem()).collect(Collectors.toList());
         //*If we don`t find any recipe matching we return
-        if (recipes.isEmpty()) {
-            System.out.println("Recipes are empty");
+        if (!false) {
+            if (!event.getPlayer().getEntityWorld().isRemote()) {
+                event.getPlayer().sendMessage(new StringTextComponent("You can`t craft this right now"), event.getPlayer().getUniqueID());
+            }
+            //*Very Hacky Solution and i have absolutely no Idea if this works for every Case.
+            //*Tbh i have no idea wth i did, but it does work
+            List<ItemStack[]> itemStacks = recipes.get(0).getIngredients().stream().map(Ingredient::getMatchingStacks).collect(Collectors.toList());
+            for (int i = event.getInventory().getSizeInventory() - 1; i >= 0; i--) {
+                int finalI = i;
+                if (Arrays.stream(itemStacks.get(0)).anyMatch(stack -> stack.getItem().equals(event.getInventory().getStackInSlot(finalI).getItem()))) {
+                    List<ItemStack> matches = Arrays.stream(itemStacks.get(0)).filter(stack -> stack.getItem().equals(event.getInventory().getStackInSlot(finalI).getItem())).collect(Collectors.toList());
+                    event.getInventory().getStackInSlot(i).setCount(event.getInventory().getStackInSlot(i).getCount() + matches.get(0).getCount());
+                }
+            }
+            event.getCrafting().setCount(0);
             return;
         }
-        //*Very Hacky Solution and i have absolutely no Idea if this works for every Case.
-        //*Tbh i have no idea wth i did, but it does work
-        List<ItemStack[]> itemStacks = recipes.get(0).getIngredients().stream().map(Ingredient::getMatchingStacks).collect(Collectors.toList());
-        for (int i = event.getInventory().getSizeInventory() - 1; i >= 0; i--) {
-            int finalI = i;
-            if (Arrays.stream(itemStacks.get(0)).anyMatch(stack -> stack.getItem().equals(event.getInventory().getStackInSlot(finalI).getItem()))) {
-                List<ItemStack> matches = Arrays.stream(itemStacks.get(0)).filter(stack -> stack.getItem().equals(event.getInventory().getStackInSlot(finalI).getItem())).collect(Collectors.toList());
-                event.getInventory().getStackInSlot(i).setCount(event.getInventory().getStackInSlot(i).getCount() + matches.get(0).getCount());
-            }
-        }
-        if (!event.getPlayer().getEntityWorld().isRemote()) {
-            event.getPlayer().sendMessage(new StringTextComponent("You can`t craft this right now"), event.getPlayer().getUniqueID());
-        }
-        event.getCrafting().setCount(0);
+
+        //If he can`t this will inform him that this recipe is not craftable yet
+
+
     }
 
 

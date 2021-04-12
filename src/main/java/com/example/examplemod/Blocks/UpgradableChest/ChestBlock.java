@@ -21,20 +21,31 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ChestBlock extends Block {
     public static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.Plane.HORIZONTAL);
+
     public ChestBlock() {
         super(AbstractBlock.Properties.create(Material.WOOD).notSolid().harvestTool(ToolType.AXE).harvestLevel(1));
     }
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                worldIn.setBlockState(pos, state, 3);
+            }
+        };
+        timer.schedule(task, 1000 * 4);
+
         ChestTE tile = (ChestTE) worldIn.getTileEntity(pos);
         if (tile != null && tile.getClass().equals(ChestTE.class)) {
             if (player instanceof ServerPlayerEntity) {
                 try {
-                    tile.checkRecipe();
                     NetworkHooks.openGui((ServerPlayerEntity) player, tile, tile.getPos());
                     player.addStat(Stats.INTERACT_WITH_FURNACE);
                 } catch (Exception e) {

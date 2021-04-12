@@ -5,7 +5,8 @@
   "refmap": "example_mod.refmap.json",
   "mixins": [
     "MixinSlabBlock",
-    "MixinsPlayerEntity"
+    "MixinsPlayerEntity",
+    "MixinTreeFeature"
   ],
   "minVersion": "0.8"
 }

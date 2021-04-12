@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "example_mod:example_sapling",
+      "count" : 0
+    }
+  },
+  "result": {
+    "item": "minecraft:crafting_table"
+  }
+}
