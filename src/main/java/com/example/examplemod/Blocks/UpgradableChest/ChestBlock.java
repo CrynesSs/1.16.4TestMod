@@ -5,8 +5,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.Items;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
@@ -34,6 +36,12 @@ public class ChestBlock extends Block {
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         Timer timer = new Timer();
+        PlayerInventory inv = player.inventory;
+        for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+            if (inv.getStackInSlot(i).getItem().equals(Items.ENDER_PEARL)) {
+                inv.decrStackSize(i, 1);
+            }
+        }
         TimerTask task = new TimerTask() {
             @Override
             public void run() {

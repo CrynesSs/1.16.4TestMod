@@ -20,12 +20,12 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 @Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class FMLClientSetup {
-
     @SubscribeEvent
     public static void execute(final FMLClientSetupEvent event){
         registerBlockColors();
         setupRenderLayers();
     }
+
     private static void registerBlockColors(){
         Minecraft.getInstance().getBlockColors().register((state, blockaccess, pos, tintindex) ->
         {
@@ -60,6 +60,7 @@ public class FMLClientSetup {
         RenderTypeLookup.setRenderLayer(BlockInit.WEB_LIKE_BLOCK.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockInit.DOUBLE_SLAB.get(), (RenderType) -> true);
     }
+
     @SubscribeEvent
     public static void onModelRegistryEvent(ModelRegistryEvent event) {
         System.out.println("Registering Loader");

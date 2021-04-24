@@ -30,6 +30,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Timer;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.biome.Biome;
@@ -53,6 +54,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -88,7 +90,11 @@ public class ExampleMod {
         TileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
         ContainerTypes.CONTAINER_TYPES.register(modEventBus);
         EntityTypes.ENTITY_TYPES.register(modEventBus);
+        //changeTimer();
 
+        ForgeRegistries.BLOCKS.getValues().parallelStream().forEach(block -> {
+
+        });
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -96,6 +102,16 @@ public class ExampleMod {
     private void setup(final FMLCommonSetupEvent event) {
         Networking.registerMessages();
         FeatureInit.registerTrees();
+    }
+    private void changeTimer(){
+        try {
+            Field f = Minecraft.class.getDeclaredField("timer");
+            f.setAccessible(true);
+            f.set(Minecraft.getInstance(),new Timer(1f, 0L));
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
@@ -140,13 +156,14 @@ public class ExampleMod {
     }
     @SubscribeEvent
     public void onBiomeLoad(BiomeLoadingEvent event) {
-        // do something when the server starts
 
 
     }
 
+
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
+    @Deprecated
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
         @SubscribeEvent
